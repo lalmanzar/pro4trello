@@ -7,21 +7,37 @@ TrelloPro.config = {
 		labels: /(\[[^\]]*\])/g,
 		hashtags: /\W(\#[a-zA-Z]+\b)(?!;)/gm,
 		time_entries: /(\{[^\}]*\})/g,
-		points: /(\|[^\}]*\|)/g
+    points: /^((\||\()[\d.]*(\||\)))/g,
 	},
 
-	renderers: {
-		tags: function(capture) { return capture.replace(' :: ','').replace(' | ',''); },
-		labels: function(capture) { return capture.replace('[','').replace(']',''); },
-		hashtags: function(capture) { return ' ' +capture },
-		time_entries: function(capture) { return capture.replace('{','').replace('}',''); },
-		points: function(capture) { return capture.split('|').join(''); }
-	},
+  renderers: {
+    tags: function(capture) {
+      return capture.replace(' :: ', '').replace(' | ', '');
+    },
+    labels: function(capture) {
+      return capture.replace('[', '').replace(']', '');
+    },
+    hashtags: function(capture) {
+      return ' ' + capture;
+    },
+    time_entries: function(capture) {
+      return capture.replace('{', '').replace('}', '');
+    },
+    points: function(capture) {
+      return capture
+        .split('|')
+        .join('')
+        .split('(')
+        .join('')
+        .split(')')
+        .join('');
+    },
+  },
 
 	symbols: {
 		label: '<i class="fa fa-tag" aria-hidden="true"></i>',
 		time_entry: '<i class="fa fa-hourglass-1" aria-hidden="true"></i>',
-		point: '<i class="fa fa-star" aria-hidden="true"></i>',
+		point: '<i class="fa fa-circle-o" aria-hidden="true"></i>',
 	},
 
 	defaultSettings: {

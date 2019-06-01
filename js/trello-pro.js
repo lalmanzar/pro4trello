@@ -692,37 +692,6 @@ let buildSettingsPane = function () {
 }
 
 /**
- * Loads the sharing pane
- */
-let loadSharePane = function() {
-	let $sharePane = jQuery('<div id="tpro-share-container"></div>');
-
-	$sharePane.load(chrome.runtime.getURL("tmpl/share.html"), function () {
-		// determine root paths
-		let imgRoot = chrome.runtime.getURL('img');
-		let root = chrome.runtime.getURL('');
-
-		// handle image sources
-		$sharePane.find('img').each(function(){
-			let $img = jQuery(this);
-			$img.attr('src',$img.attr('src').replace('{$PATH}',imgRoot));
-		});
-
-		// handle links source
-		$sharePane.find('a').each(function(){
-			let $a = jQuery(this);
-			$a.attr('href',$a.attr('href').replace('{$PATH}',root));
-		});
-
-		$sharePane.on('click', function(){
-			$sharePane.remove();
-		});
-
-		$sharePane.appendTo(jQuery('body'));
-	});
-}
-
-/**
  * Builds the TrelloPro footsser
  */
 let buildFooter = function() {
@@ -747,8 +716,6 @@ let buildMenu = function () {
 	$list.append('<li><a class="js-select light-hover" href="#" data-action="review"><i class="fa fa-thumbs-up" style="color: #006266; float:right; padding-top: 3px;"></i>Review Extension</a></li>');
 	$list.append('<li><a class="js-select light-hover" href="#" data-action="support"><i class="fa fa-book" style="color: #6c5ce7; float:right; padding-top: 3px;"></i>Get Support</a></li>');
 	$list.append('<li><hr /></li>');
-	$list.append('<li><a class="js-select light-hover" href="#" data-action="share"><i class="fa fa-heart" style="color: #d63031; float:right; padding-top: 3px;"></i>Share the Love</a></li>');
-	$list.append('<li><a class="js-select light-hover" href="#" data-action="donate"><i class="fa fa-beer" style="color: #F79F1F; float:right; padding-top: 3px;"></i>Buy Beer for Author</a></li>');
 
 	let $menuButton = jQuery('<a id="tpro-menu-button" class="board-header-btn calendar-btn" href="#"><span class="icon-sm icon-board board-header-btn-icon"></span><span class="board-header-btn-text u-text-underline">Pro4Trello</span></a>');	
 	$menuButton.on('click', function(e) {
@@ -781,12 +748,6 @@ let buildMenu = function () {
 				break;
 			case 'support':
 				window.open('https://chrome.google.com/webstore/detail/pro-for-trello-free-trell/hcjkfaengbcfeckhjgjdldmhjpoglecc/support', '_blank');				
-				break;
-			case 'share':
-				loadSharePane();
-				break;
-			case 'donate':
-				window.open(chrome.runtime.getURL('docs/donate.html'), '_blank');
 				break;
 		}
 
@@ -1300,7 +1261,7 @@ let buildListStats = function($list,list) {
 	  if(TrelloPro.settings['parse-points']) {
 			$stats.append(
 		    '<span class="tpro-stat points" title="Total Points">'
-		      +'<i class="fa fa-star" aria-hidden="true"></i> '
+		      +'<i class="fa fa-circle-o" aria-hidden="true"></i> '
 		      +'<span></span>'
 		    +'</span>');
 	  }

@@ -3,8 +3,8 @@
 
     "manifest_version": 2,
 
-    "name": "Pro for Trello, FREE Trello tweaks",
-    "short_name": "Pro for Trello",
+    "name": "Pro for Trello, FREE Trello tweaks (Forked)",
+    "short_name": "Pro for Trello (Forked)",
     "description": "Ultimate FREE tweaks for Trello users! Your Trello boards on steroids!",
     "version": "3.0",
     "options_page": "options.html",
@@ -44,7 +44,6 @@
             "lib/jquery-3.0.0.min.js",
             "js/config.js",
             "js/trello-pro.js",
-            "js/analytics.js",
             "js/board.js"
         ],
         "css": [
@@ -52,7 +51,5 @@
         ],
         "run_at": "document_idle",
         "all_frames": true
-    }],
-
-    "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
+    }]
 }
