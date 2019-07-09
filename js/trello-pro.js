@@ -60,6 +60,22 @@ let sumTimeEntries = function(startTime, endTime) {
   return ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2);
 }
 
+let formatPoints = function(points) {
+	if(isNaN(points)) {
+		points = 0;
+	}
+
+	let decimals = 0;
+	if(Math.floor(points.valueOf()) !== points.valueOf()) {
+		decimals = parseFloat(points).toFixed(2).toString().replace(/0+$/,'').split(".")[1].length || 0;
+	}
+	switch(decimals) {
+		case 0: return parseInt(points);
+		case 1: return parseFloat(points).toFixed(1);
+		case 2: return parseFloat(points).toFixed(2);
+	}
+}
+
 /**
  * Prepares a given string name to be used as a HTML attribute
  *
@@ -586,6 +602,7 @@ let refreshListsAndStats = function() {
 
 	TrelloPro.lists = lists;
 	store('lists_'+TrelloPro.boardId, TrelloPro.lists);
+	refreshBoardTotals();
 	refreshListFilter();
 }
 
@@ -595,6 +612,20 @@ let refreshListsAndStats = function() {
 let refreshListFilter = function() {
 	let shown = TrelloPro.lists.length - (TrelloPro.settings.filters.lists ? TrelloPro.settings.filters.lists.length : 0);
 	jQuery('#tpro-lists-filter').text(shown + '/' + TrelloPro.lists.length);
+}
+
+/**
+ * Refreshes the total Points of the board
+ */
+let refreshBoardTotals = function () {
+	if(!TrelloPro.settings['parse-points']) return;
+
+	let sumValues = function (prev, curr) {
+		return prev + curr.totalPoints;
+	};
+	let totalPoints = TrelloPro.lists.reduce(sumValues, 0);
+	let points = formatPoints(totalPoints);
+	jQuery('#tpro-board-totals .tpro-total-points').text(points);
 }
 
 // -----------------------------------------------------------------------------
@@ -1231,6 +1262,21 @@ let buildListsFilter = function () {
 }
 
 /**
+ * Builds the Board Total Points
+ */
+let buildBoardTotals = function () {
+	if(!TrelloPro.settings['parse-points']) return;
+	log('building board total...');
+
+	// create
+	let $boardTotal = jQuery('<span id="tpro-board-totals">Points: <span class="tpro-total-points"></span></span>');
+	TrelloPro.$footer.find('.board-header-btns.mod-left')
+		.append($boardTotal)
+		.append('<span class="board-header-btn-divider"></span>');
+	refreshBoardTotals();
+}
+
+/**
  * Builds stats for a list
  *
  * @param {jQuery} $list
@@ -1308,22 +1354,6 @@ let buildListStats = function($list,list) {
 
   // tasks count
 	$stats.find('.tpro-stat.checklist span').text(list.completedTasks + '/' + list.totalTasks);
-
-  let formatPoints = function(points) {
-		if(isNaN(points)) {
-			points = 0;
-		}
-
-		let decimals = 0;
-		if(Math.floor(points.valueOf()) !== points.valueOf()) {
-			decimals = parseFloat(points).toFixed(2).toString().replace(/0+$/,'').split(".")[1].length || 0;
-		}
-    switch(decimals) {
-			case 0: return parseInt(points);
-			case 1: return parseFloat(points).toFixed(1);
-			case 2: return parseFloat(points).toFixed(2);
-		}
-	}
 
   // points
   if(TrelloPro.settings['parse-points']) {
@@ -1522,7 +1552,8 @@ let loadBoard = function () {
 					log('[ TrelloPro loaded ]');
 					TrelloPro.loaded = true;
 					buildFooter();
-					refreshListsAndStats();					
+					refreshListsAndStats();	
+					buildBoardTotals();				
 					buildListsFilter();		
 					buildPriorityFilter();			
 					buildProjectFilter();

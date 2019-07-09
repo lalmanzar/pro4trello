@@ -440,3 +440,19 @@ span.tpro-before-after {
      -moz-transform: translate3d(100%, 0, 0);
           transform: translate3d(100%, 0, 0);
 }
+
+
+/* ============================ BOARD TOTALS ============================ */
+
+#tpro-board-totals {
+  height: 32px;
+  line-height: 32px;
+  float: left;
+  font-size: 24px;
+  margin-right: 4px;
+  color: rgba(0,0,0,.7);
+}
+
+#tpro-board-totals .tpro-total-points {
+  font-weight: bold;
+}
